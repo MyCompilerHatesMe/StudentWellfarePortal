@@ -1,16 +1,17 @@
 package com.mchm.swp.model.profiles;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"faculty_id", "student_id", "subject"})
+})
 public class FacultySubjectEnrollment {
 
     @Id

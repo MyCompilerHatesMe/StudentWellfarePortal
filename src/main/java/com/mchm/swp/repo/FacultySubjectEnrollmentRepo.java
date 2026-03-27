@@ -11,4 +11,10 @@ public interface FacultySubjectEnrollmentRepo extends JpaRepository<FacultySubje
     Collection<FacultySubjectEnrollment> findByStudent_AuthUser_Username(String authUsername);
 
     Collection<FacultySubjectEnrollment> findByFaculty_AuthUser_Username(String authUsername);
+
+    boolean existsByFaculty_AuthUser_UsernameAndStudent_AuthUser_UsernameAndSubject(
+            String facultyUsername,
+            String studentUsername,
+            String subject
+    );
 }
