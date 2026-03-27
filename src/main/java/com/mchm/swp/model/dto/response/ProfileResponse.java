@@ -1,13 +1,14 @@
 package com.mchm.swp.model.dto.response;
 
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
+@SuperBuilder
+@NoArgsConstructor
 public class ProfileResponse {
     private String name;
     private String email;
-    private String rollNo;
 }
