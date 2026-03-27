@@ -47,4 +47,8 @@ public class StudentProfile {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         return sum.divide(BigDecimal.valueOf(marks.size()), 2, RoundingMode.HALF_UP);
     }
+
+    public String getAuthUsername() {
+        return authUser.getUsername();
+    }
 }
