@@ -14,7 +14,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
-    private static final String SECRET_KEY = "this-is-a-secret-key-it-is-long-";
+    private final String SECRET_KEY;
+
+    public JwtService() {
+        this.SECRET_KEY = System.getenv("JWT_SECRET_KEY");
+        if (this.SECRET_KEY == null || this.SECRET_KEY.length() < 32)
+            throw new IllegalStateException("JWT_SECRET_KEY must be set and at least 32 characters");
+    }
 
     private SecretKey getSigningKey () {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
