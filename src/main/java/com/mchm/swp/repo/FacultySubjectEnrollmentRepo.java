@@ -9,4 +9,6 @@ import java.util.Collection;
 @Repository
 public interface FacultySubjectEnrollmentRepo extends JpaRepository<FacultySubjectEnrollment, Long> {
     Collection<FacultySubjectEnrollment> findByStudent_AuthUser_Username(String authUsername);
+
+    Collection<FacultySubjectEnrollment> findByFaculty_AuthUser_Username(String authUsername);
 }

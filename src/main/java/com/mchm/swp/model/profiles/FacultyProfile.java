@@ -35,4 +35,8 @@ public class FacultyProfile {
 
     @OneToMany(mappedBy = "faculty")
     private List<FacultySubjectEnrollment> enrollments;
+
+    public String getAuthUsername() {
+        return authUser.getUsername();
+    }
 }

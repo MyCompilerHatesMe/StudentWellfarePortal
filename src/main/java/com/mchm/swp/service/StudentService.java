@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,30 +56,27 @@ public class StudentService {
             if (!user.getUsername().equals(searchUsername))
                 throw new AccessDeniedException("Usernames do not match");
 
-            Optional<StudentProfile> optionalProfile = studentRepo.findByAuthUser_Username(searchUsername);
-            if (optionalProfile.isEmpty())
-                throw new StudentNotFoundException("Student with authUsername " + searchUsername + " not found");
-
-            return optionalProfile.get();
+            return getProfile(searchUsername);
 
         } else if (SecurityUtils.isParent(user)) {
 
-            Optional<ParentProfile> optionalParentProfile = parentRepo.findByAuthUser_Username(user.getUsername());
-            if (optionalParentProfile.isEmpty())
-                throw new ParentNotFoundException("Parent with authUsername " + user.getUsername() + " not found");
+            ParentProfile parentProfile = parentRepo.findByAuthUser_Username(user.getUsername())
+                    .orElseThrow(() -> new ParentNotFoundException(user.getUsername()));
 
-            if (optionalParentProfile.get().getChildren().stream()
+            if (parentProfile.getChildren().stream()
                     .map(StudentProfile::getAuthUsername)
                     .anyMatch(searchUsername::equals)) {
-                Optional<StudentProfile> optionalStudentProfile = studentRepo.findByAuthUser_Username(searchUsername);
-                if (optionalStudentProfile.isEmpty())
-                    throw new StudentNotFoundException("Student with authUsername " + searchUsername + " not found");
-                return optionalStudentProfile.get();
+                throw new AccessDeniedException("Parent has no such child");
+            }
 
-            } else throw new AccessDeniedException("Parent has no such child");
-
+            return getProfile(searchUsername);
         } else {
             throw new AccessDeniedException("No valid role.");
         }
+    }
+
+    private StudentProfile getProfile(String searchUsername) {
+        return studentRepo.findByAuthUser_Username(searchUsername)
+                .orElseThrow(() -> new StudentNotFoundException(searchUsername));
     }
 }
