@@ -13,9 +13,9 @@ import com.mchm.swp.repo.StudentProfileRepo;
 import com.mchm.swp.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class ProfileUtils {
 
@@ -38,9 +38,9 @@ public class ProfileUtils {
             ParentProfile parentProfile = parentRepo.findByAuthUser_Username(user.getUsername())
                     .orElseThrow(() -> new ParentNotFoundException(user.getUsername()));
 
-            if (!parentProfile.getChildren().stream()
+            if (parentProfile.getChildren().stream()
                     .map(StudentProfile::getAuthUsername)
-                    .anyMatch(searchUsername::equals)) {
+                    .noneMatch(searchUsername::equals)) {
                 throw new AccessDeniedException("Parent has no such child");
             }
 
