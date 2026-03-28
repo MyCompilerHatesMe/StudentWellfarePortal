@@ -39,7 +39,7 @@ public class AuthService {
         user.setRoles(
                 request.getRoles().stream()
                         .map(s -> {
-                            if (s.equalsIgnoreCase("admin"))
+                            if (s.equalsIgnoreCase(Role.ROLE_ADMIN.name()))
                                 throw new IllegalArgumentException("Invalid Role");
                             return Role.valueOf(s);
                         })
@@ -51,10 +51,7 @@ public class AuthService {
 
         AuthUser saved = userRepo.save(user);
 
-        publisher.publishEvent(new UserRegisteredEvent(
-                saved, saved.getRoles()
-                .stream().map(String::valueOf)
-                .collect(Collectors.toSet())));
+        publisher.publishEvent(new UserRegisteredEvent(saved, saved.getRoles()));
 
         return mapper.toResponse(saved);
     }
