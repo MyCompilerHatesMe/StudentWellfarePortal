@@ -24,9 +24,6 @@ public class FacultyProfile {
     @MapsId
     private AuthUser authUser;
 
-    @Column(nullable = false, unique = true)
-    private String rollNo;
-
     @Column(nullable = false)
     private String name;
 
