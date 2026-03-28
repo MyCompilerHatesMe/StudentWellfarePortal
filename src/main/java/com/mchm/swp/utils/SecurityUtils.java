@@ -1,5 +1,6 @@
 package com.mchm.swp.utils;
 
+import com.mchm.swp.model.Role;
 import com.mchm.swp.security.SecurityUser;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,19 +14,19 @@ public class SecurityUtils {
     }
 
     public static boolean isAdmin(SecurityUser user) {
-        return hasRole(user, "ROLE_ADMIN");
+        return hasRole(user, Role.ROLE_ADMIN.name());
     }
 
     public static boolean isStudent(SecurityUser user) {
-        return hasRole(user, "ROLE_STUDENT");
+        return hasRole(user, Role.ROLE_STUDENT.name());
     }
 
     public static boolean isFaculty(SecurityUser user) {
-        return hasRole(user, "ROLE_FACULTY");
+        return hasRole(user, Role.ROLE_FACULTY.name());
     }
 
     public static boolean isParent(SecurityUser user) {
-        return hasRole(user, "ROLE_PARENT");
+        return hasRole(user, Role.ROLE_PARENT.name());
     }
 
     public static SecurityUser getCurrentSecurityUser() {
