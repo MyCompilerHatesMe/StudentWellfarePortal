@@ -7,6 +7,7 @@ import com.mchm.swp.model.profiles.StudentProfile;
 import com.mchm.swp.repo.FacultySubjectEnrollmentRepo;
 import com.mchm.swp.utils.DtoMapper;
 import com.mchm.swp.utils.ProfileUtils;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ public class AdminService {
     private final ProfileUtils utils;
     private final DtoMapper mapper;
 
+    @Transactional
     public ConnectionResponse connect(String studentUsername, String facultyUsername, String subject) {
 
         if (enrollmentRepo.existsByFaculty_AuthUser_UsernameAndStudent_AuthUser_UsernameAndSubject(

@@ -9,6 +9,7 @@ import com.mchm.swp.model.event.UserRegisteredEvent;
 import com.mchm.swp.repo.AuthUserRepo;
 import com.mchm.swp.security.SecurityUser;
 import com.mchm.swp.utils.DtoMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,6 +32,7 @@ public class AuthService {
     private final DtoMapper mapper;
     private final ApplicationEventPublisher publisher;
 
+    @Transactional
     public RegisterResponse register (RegisterRequest request) throws IllegalArgumentException {
         AuthUser user = new AuthUser();
 
