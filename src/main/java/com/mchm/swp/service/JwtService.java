@@ -52,7 +52,7 @@ public class JwtService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
-                .get("role", Set.class);
+                .get("roles", Set.class);
         return roles.stream().map(Role::valueOf).collect(Collectors.toSet());
     }
 
