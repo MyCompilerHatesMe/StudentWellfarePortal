@@ -3,11 +3,14 @@ package com.mchm.swp.service;
 import com.mchm.swp.model.AuthUser;
 import com.mchm.swp.model.Role;
 import com.mchm.swp.model.dto.request.LoginRequest;
-import com.mchm.swp.model.dto.response.RegisterResponse;
-import com.mchm.swp.repo.AuthUserRepo;
 import com.mchm.swp.model.dto.request.RegisterRequest;
+import com.mchm.swp.model.dto.response.RegisterResponse;
+import com.mchm.swp.model.event.UserRegisteredEvent;
+import com.mchm.swp.repo.AuthUserRepo;
 import com.mchm.swp.security.SecurityUser;
+import com.mchm.swp.utils.DtoMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +28,8 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authManager;
     private final JwtService jwtService;
+    private final DtoMapper mapper;
+    private final ApplicationEventPublisher publisher;
 
     public RegisterResponse register (RegisterRequest request) throws IllegalArgumentException {
         AuthUser user = new AuthUser();
@@ -43,10 +48,13 @@ public class AuthService {
         user.setUsername(request.getName());
 
         AuthUser saved = userRepo.save(user);
-        return RegisterResponse.builder()
-                .user(saved.getUsername())
-                .roles(saved.getRoles().stream().map(Role::name).collect(Collectors.toSet()))
-                .build();
+
+        publisher.publishEvent(new UserRegisteredEvent(
+                saved, saved.getRoles()
+                .stream().map(String::valueOf)
+                .collect(Collectors.toSet())));
+
+        return mapper.toResponse(saved);
     }
 
     public String login (LoginRequest request) {
