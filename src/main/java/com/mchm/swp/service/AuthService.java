@@ -1,5 +1,6 @@
 package com.mchm.swp.service;
 
+import com.mchm.swp.exception.UsernameExistsException;
 import com.mchm.swp.model.AuthUser;
 import com.mchm.swp.model.Role;
 import com.mchm.swp.model.dto.request.LoginRequest;
@@ -12,6 +13,7 @@ import com.mchm.swp.utils.DtoMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -49,7 +51,12 @@ public class AuthService {
         user.setPasswordHash(passwordEncoder.encode(request.password()));
         user.setUsername(request.name());
 
-        AuthUser saved = userRepo.save(user);
+        AuthUser saved;
+        try {
+            saved = userRepo.save(user);
+        } catch (DataIntegrityViolationException _) {
+            throw new UsernameExistsException(user.getUsername());
+        }
 
         publisher.publishEvent(new UserRegisteredEvent(saved, saved.getRoles()));
 

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 public class JwtService {
 
-    @Value("${jwt.secret.key")
+    @Value("${jwt.secret.key}")
     private String SECRET_KEY;
 
     @PostConstruct
