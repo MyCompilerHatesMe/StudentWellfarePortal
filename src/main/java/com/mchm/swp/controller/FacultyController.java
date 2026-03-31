@@ -1,8 +1,10 @@
 package com.mchm.swp.controller;
 
+import com.mchm.swp.model.dto.request.StandardProfileUpdateRequest;
 import com.mchm.swp.model.dto.response.FacultyProfileResponse;
 import com.mchm.swp.model.dto.response.StudentProfileResponse;
 import com.mchm.swp.service.FacultyService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,8 +23,8 @@ public class FacultyController {
     private final FacultyService service;
 
     @GetMapping("/profile")
-    public ResponseEntity<FacultyProfileResponse> getProfileByUsername() {
-        return ResponseEntity.ok(service.getProfileByUsername());
+    public ResponseEntity<FacultyProfileResponse> getFacultyProfile() {
+        return ResponseEntity.ok(service.getFacultyProfile());
     }
 
     @GetMapping("/students")
@@ -43,5 +45,10 @@ public class FacultyController {
     ) {
         service.updateStudentMarks(studentUsername, subject, marks);
         return ResponseEntity.ok("Marks updated successfully");
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<FacultyProfileResponse> updateProfile(@RequestBody @Valid StandardProfileUpdateRequest request) {
+        return ResponseEntity.ok(service.updateProfile(request));
     }
 }
