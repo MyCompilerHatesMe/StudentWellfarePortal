@@ -1,12 +1,13 @@
 package com.mchm.swp.model.dto.request;
 
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.util.Set;
 
-@Data
-public class RegisterRequest {
-    private String name;
-    private String password;
-    private Set<String> roles;
+public record RegisterRequest(
+        @NotBlank(message = "Register request name must not be blank") String name,
+        @NotBlank(message = "Register request password must not be blank") String password,
+        @NotEmpty(message = "At least one role must be provided") Set<String> roles
+) {
 }

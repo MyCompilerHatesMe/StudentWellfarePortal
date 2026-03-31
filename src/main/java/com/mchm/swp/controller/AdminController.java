@@ -3,6 +3,7 @@ package com.mchm.swp.controller;
 import com.mchm.swp.model.dto.request.ConnectionRequest;
 import com.mchm.swp.model.dto.response.ConnectionResponse;
 import com.mchm.swp.service.AdminService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,11 +20,11 @@ public class AdminController {
     private final AdminService service;
 
     @PostMapping("/enroll")
-    public ResponseEntity<ConnectionResponse> connectStudentFaculty(@RequestBody ConnectionRequest req) {
+    public ResponseEntity<ConnectionResponse> connectStudentFaculty(@RequestBody @Valid ConnectionRequest req) {
         return ResponseEntity.ok(service.connect(
-                req.getStudentUsername(),
-                req.getFacultyUsername(),
-                req.getSubject())
+                req.studentUsername(),
+                req.facultyUsername(),
+                req.subject())
         );
     }
 }

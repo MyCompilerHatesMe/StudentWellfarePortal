@@ -1,10 +1,10 @@
 package com.mchm.swp.model.dto.request;
 
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
 
-@Data
-public class ConnectionRequest {
-    private String studentUsername;
-    private String facultyUsername;
-    private String subject;
+public record ConnectionRequest(
+        @NotBlank(message = "Student username must not be blank") String studentUsername,
+        @NotBlank(message = "Faculty username must not be blank") String facultyUsername,
+        @NotBlank(message = "Subject must not be blank") String subject
+) {
 }

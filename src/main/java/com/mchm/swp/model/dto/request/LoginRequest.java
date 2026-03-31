@@ -1,9 +1,9 @@
 package com.mchm.swp.model.dto.request;
 
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
 
-@Data
-public class LoginRequest {
-    private String name;
-    private String password;
+public record LoginRequest(
+        @NotBlank(message = "Login Request username must not be blank") String name,
+        @NotBlank(message = "Login request password must not be blank") String password
+) {
 }

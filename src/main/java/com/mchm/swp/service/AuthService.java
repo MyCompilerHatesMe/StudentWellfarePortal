@@ -37,7 +37,7 @@ public class AuthService {
         AuthUser user = new AuthUser();
 
         user.setRoles(
-                request.getRoles().stream()
+                request.roles().stream()
                         .map(s -> {
                             if (s.equalsIgnoreCase(Role.ROLE_ADMIN.name()))
                                 throw new IllegalArgumentException("Invalid Role");
@@ -46,8 +46,8 @@ public class AuthService {
                         .collect(Collectors.toSet())
         );
 
-        user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
-        user.setUsername(request.getName());
+        user.setPasswordHash(passwordEncoder.encode(request.password()));
+        user.setUsername(request.name());
 
         AuthUser saved = userRepo.save(user);
 
@@ -59,10 +59,10 @@ public class AuthService {
     public String login (LoginRequest request) {
         try {
             Authentication auth = authManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getName(), request.getPassword())
+                    new UsernamePasswordAuthenticationToken(request.name(), request.password())
             );
             return jwtService.generateToken(
-                    request.getName(),
+                    request.name(),
                     // authUser will never be null, auth guarantees a "fully authenticated object"
                     // or AuthenticationException.
                     ((SecurityUser) auth.getPrincipal()).authUser().getRoles()
