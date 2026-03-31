@@ -21,7 +21,6 @@ public interface DtoMapper {
     @Mapping(source = "student.authUser.username", target = "studentUsername")
     EnrollmentConnectionResponse toResponse(FacultySubjectEnrollment enrollment);
 
-    @Mapping(source = "username", target = "user")
     RegisterResponse toResponse(AuthUser user);
 
 }
