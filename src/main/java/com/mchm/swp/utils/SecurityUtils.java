@@ -2,6 +2,7 @@ package com.mchm.swp.utils;
 
 import com.mchm.swp.model.Role;
 import com.mchm.swp.security.SecurityUser;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -30,7 +31,12 @@ public class SecurityUtils {
     }
 
     public static SecurityUser getCurrentSecurityUser() {
-        return (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) throw new IllegalStateException("User is not authenticated");
+        // unreachable in practice, unauthenticated request would be blocked
+        // before they reach any service method could call this
+        // but since the compiler asks nicely it shall be null checked.
+        return (SecurityUser) auth.getPrincipal();
     }
 
     public static String getUsername() {
