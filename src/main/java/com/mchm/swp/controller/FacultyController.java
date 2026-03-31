@@ -6,10 +6,7 @@ import com.mchm.swp.service.FacultyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -36,5 +33,15 @@ public class FacultyController {
     @GetMapping("/student/{studentUsername}/marks")
     public ResponseEntity<Map<String, BigDecimal>> getMarksFromAuthUsername(@PathVariable String studentUsername) {
         return ResponseEntity.ok(service.getStudentMarksByStudentUsername(studentUsername));
+    }
+
+    @PutMapping("/student/{studentUsername}/marks/{subject}")
+    public ResponseEntity<String> updateMarks(
+            @PathVariable String studentUsername,
+            @PathVariable String subject,
+            @RequestBody BigDecimal marks
+    ) {
+        service.updateStudentMarks(studentUsername, subject, marks);
+        return ResponseEntity.ok("Marks updated successfully");
     }
 }
