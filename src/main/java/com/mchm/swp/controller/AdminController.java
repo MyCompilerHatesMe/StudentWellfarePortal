@@ -1,7 +1,9 @@
 package com.mchm.swp.controller;
 
-import com.mchm.swp.model.dto.request.ConnectionRequest;
-import com.mchm.swp.model.dto.response.ConnectionResponse;
+import com.mchm.swp.model.dto.request.EnrollmentConnectionRequest;
+import com.mchm.swp.model.dto.request.WardConnectionRequest;
+import com.mchm.swp.model.dto.response.EnrollmentConnectionResponse;
+import com.mchm.swp.model.dto.response.WardConnectionResponse;
 import com.mchm.swp.service.AdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +22,20 @@ public class AdminController {
     private final AdminService service;
 
     @PostMapping("/enroll")
-    public ResponseEntity<ConnectionResponse> connectStudentFaculty(@RequestBody @Valid ConnectionRequest req) {
-        return ResponseEntity.ok(service.connect(
+    public ResponseEntity<EnrollmentConnectionResponse> connectStudentFaculty(@RequestBody @Valid EnrollmentConnectionRequest req) {
+        return ResponseEntity.ok(service.enroll(
                 req.studentUsername(),
                 req.facultyUsername(),
                 req.subject())
         );
     }
+
+    @PostMapping("/connect")
+    public ResponseEntity<WardConnectionResponse> connectParentWard(@RequestBody @Valid WardConnectionRequest req) {
+        return ResponseEntity.ok(service.connect(
+                req.parentUsername(),
+                req.studentUsername()
+        ));
+    }
+
 }

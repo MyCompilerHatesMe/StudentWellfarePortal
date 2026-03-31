@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ConnectionResponse {
+public class EnrollmentConnectionResponse {
     private String studentUsername;
     private String facultyUsername;
     private String subject;
