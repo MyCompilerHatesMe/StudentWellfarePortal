@@ -34,8 +34,7 @@ public class ProfileService {
             StudentProfile profile = new StudentProfile();
             profile.setAuthUser(user);
             profile.setName(user.getUsername());
-            profile.setRollNo("S" + String.format("%06d", user.getId()));
-            // TODO: this should take the count from number of students, not authUser.id
+            profile.setRollNo("S" + String.format("%06d", studentRepo.count()));
             profile.setEmail(user.getUsername() + "@university.edu.in");
             studentRepo.save(profile);
         }
