@@ -12,6 +12,7 @@ Built with Spring Boot.
 - JWT authentication
 - Lombok, MapStruct
 - Gradle
+- Jakarta Validation
 
 ---
 
@@ -24,6 +25,11 @@ Built with Spring Boot.
 - `AuthUser` handles auth. Separate profile entities (`StudentProfile`, `FacultyProfile`, etc.) handle everything else,
   linked via `@MapsId`
 - Global exception handler so errors come back in a consistent format
+
+### Todo
+
+- Error responses currently return a plain string. Should be a structured `ErrorResponse` JSON object
+  for consistent frontend consumption, e.g. `{ "status": 400, "message": "..." }`
 
 ---
 
@@ -51,8 +57,66 @@ cd StudentWellfarePortal
 ./gradlew bootRun
 ```
 
+## API Overview
+
+All endpoints require a Bearer JWT token unless stated otherwise.
+Where `{username}` is not in the path, the authenticated user's identity is used from the security context.
+
+### Auth — `/auth`
+
+| Method |    Path     | Auth |
+|:------:|:-----------:|:----:|
+|  POST  | `/register` | None |
+|  POST  |  `/login`   | None |
+
+### Student — `/student`
+
+| Method |         Path          |
+|:------:|:---------------------:|
+|  GET   | `/{username}/profile` |
+|  GET   |  `/{username}/marks`  |
+|  GET   | `/{username}/faculty` |
+|  PUT   | `/{username}/profile` |
+
+### Faculty — `/faculty`
+
+| Method |                     Path                     |
+|:------:|:--------------------------------------------:|
+|  GET   |                  `/profile`                  | 
+|  GET   |                 `/students`                  |
+|  GET   |      `/student/{studentUsername}/marks`      |
+|  PUT   | `/student/{studentUsername}/marks/{subject}` |
+|  PUT   |                  `/profile`                  |
+
+### Parent — `/parent`
+
+| Method |            Path            |
+|:------:|:--------------------------:|
+|  GET   |         `/profile`         |
+|  GET   |          `/wards`          |
+|  GET   | `/ward/{username}/profile` |
+|  GET   |  `/ward/{username}/marks`  |
+|  PUT   |         `/profile`         |
+
+### Admin — `/admin`
+
+| Method |    Path    |
+|:------:|:----------:|
+|  POST  | `/enroll`  |
+|  POST  | `/connect` |
+
 ---
 
 ## Notes
 
 This is a portfolio project focused on backend architecture, authentication, and clean code.
+
+### First Run Flow
+
+Profiles are auto-created on registration. Students and faculty get their name from their log in username and a
+generated university email. Parent accounts get placeholder email and number, a PUT to `/parent/profile` is expected to
+fill these in.
+
+### Known Limitations
+
+- Roll number generation uses a count query and is not concurrency safe, a db sequence would be better for prod.
