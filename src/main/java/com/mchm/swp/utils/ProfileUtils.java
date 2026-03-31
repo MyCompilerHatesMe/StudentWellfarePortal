@@ -37,7 +37,7 @@ public class ProfileUtils {
 
         } else if (SecurityUtils.isParent(user)) {
 
-            ParentProfile parentProfile = getParentProfile(searchUsername);
+            ParentProfile parentProfile = getParentProfile(user.getUsername());
 
             if (parentProfile.getChildren().stream()
                     .map(StudentProfile::getAuthUsername)

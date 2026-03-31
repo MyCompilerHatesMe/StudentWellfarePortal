@@ -33,8 +33,8 @@ public class AdminController {
     @PostMapping("/connect")
     public ResponseEntity<WardConnectionResponse> connectParentWard(@RequestBody @Valid WardConnectionRequest req) {
         return ResponseEntity.ok(service.connect(
-                req.parentUsername(),
-                req.studentUsername()
+                req.studentUsername(),
+                req.parentUsername()
         ));
     }
 

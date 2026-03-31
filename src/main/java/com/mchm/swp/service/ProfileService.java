@@ -41,7 +41,7 @@ public class ProfileService {
         StudentProfile profile = new StudentProfile();
         profile.setAuthUser(user);
         profile.setName(user.getUsername());
-        profile.setRollNo("S" + String.format("%06d", studentRepo.count()));
+        profile.setRollNo("S" + String.format("%06d", studentRepo.count() + 1));
         profile.setEmail(user.getUsername() + "@university.edu.in");
         return profile;
     }
