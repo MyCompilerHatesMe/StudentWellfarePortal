@@ -22,10 +22,6 @@ public class SecurityUtils {
         return hasRole(user, Role.ROLE_STUDENT.name());
     }
 
-    public static boolean isFaculty(SecurityUser user) {
-        return hasRole(user, Role.ROLE_FACULTY.name());
-    }
-
     public static boolean isParent(SecurityUser user) {
         return hasRole(user, Role.ROLE_PARENT.name());
     }
