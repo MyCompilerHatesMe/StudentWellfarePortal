@@ -29,29 +29,37 @@ public class ProfileService {
         AuthUser user = event.user();
         Set<Role> roles = event.roles();
 
-        // TODO: make cleaner
-        if (roles.contains(Role.ROLE_STUDENT)) {
-            StudentProfile profile = new StudentProfile();
-            profile.setAuthUser(user);
-            profile.setName(user.getUsername());
-            profile.setRollNo("S" + String.format("%06d", studentRepo.count()));
-            profile.setEmail(user.getUsername() + "@university.edu.in");
-            studentRepo.save(profile);
-        }
-        if (roles.contains(Role.ROLE_FACULTY)) {
-            FacultyProfile profile = new FacultyProfile();
-            profile.setAuthUser(user);
-            profile.setName(user.getUsername());
-            profile.setEmail(user.getUsername() + "@university.edu.in");
-            facultyRepo.save(profile);
-        }
-        if (roles.contains(Role.ROLE_PARENT)) {
-            ParentProfile profile = new ParentProfile();
-            profile.setAuthUser(user);
-            profile.setName(user.getUsername());
-            profile.setEmail("placeholder");
-            profile.setNumber("placeholder"); // should be changed after registration.
-            parentRepo.save(profile);
-        }
+        if (roles.contains(Role.ROLE_STUDENT))
+            studentRepo.save(createStudentProfile(user));
+        if (roles.contains(Role.ROLE_FACULTY))
+            facultyRepo.save(createFacultyProfile(user));
+        if (roles.contains(Role.ROLE_PARENT))
+            parentRepo.save(createParentProfile(user));
+    }
+
+    private StudentProfile createStudentProfile(AuthUser user) {
+        StudentProfile profile = new StudentProfile();
+        profile.setAuthUser(user);
+        profile.setName(user.getUsername());
+        profile.setRollNo("S" + String.format("%06d", studentRepo.count()));
+        profile.setEmail(user.getUsername() + "@university.edu.in");
+        return profile;
+    }
+
+    private FacultyProfile createFacultyProfile(AuthUser user) {
+        FacultyProfile profile = new FacultyProfile();
+        profile.setAuthUser(user);
+        profile.setName(user.getUsername());
+        profile.setEmail(user.getUsername() + "@university.edu.in");
+        return profile;
+    }
+
+    private ParentProfile createParentProfile(AuthUser user) {
+        ParentProfile profile = new ParentProfile();
+        profile.setAuthUser(user);
+        profile.setName(user.getUsername());
+        profile.setEmail("placeholder");
+        profile.setNumber("placeholder"); // should be changed after registration.
+        return profile;
     }
 }
