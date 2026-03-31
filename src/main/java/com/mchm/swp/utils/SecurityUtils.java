@@ -32,4 +32,8 @@ public class SecurityUtils {
     public static SecurityUser getCurrentSecurityUser() {
         return (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
+
+    public static String getUsername() {
+        return getCurrentSecurityUser().getUsername();
+    }
 }

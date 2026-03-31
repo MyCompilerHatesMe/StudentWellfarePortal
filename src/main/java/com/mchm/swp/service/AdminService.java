@@ -26,7 +26,7 @@ public class AdminService {
                 facultyUsername, studentUsername, subject
         )) throw new IllegalStateException("Student-Faculty-Subject Enrollment already exists");
 
-        StudentProfile studentProfile = utils.getProfile(studentUsername);
+        StudentProfile studentProfile = utils.getStudentProfile(studentUsername);
         FacultyProfile facultyProfile = utils.getVerifiedFacultyProfile(facultyUsername);
 
         FacultySubjectEnrollment toBeSaved = FacultySubjectEnrollment.builder()

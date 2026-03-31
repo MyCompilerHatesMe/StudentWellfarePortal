@@ -1,4 +1,4 @@
-package com.mchm.swp.utils;
+package com.mchm.swp.service;
 
 
 import com.mchm.swp.model.AuthUser;

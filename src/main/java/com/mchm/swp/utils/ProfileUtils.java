@@ -32,7 +32,7 @@ public class ProfileUtils {
             if (!user.getUsername().equals(searchUsername))
                 throw new AccessDeniedException("Usernames do not match");
 
-            return getProfile(searchUsername);
+            return getStudentProfile(searchUsername);
 
         } else if (SecurityUtils.isParent(user)) {
 
@@ -45,15 +45,25 @@ public class ProfileUtils {
                 throw new AccessDeniedException("Parent has no such child");
             }
 
-            return getProfile(searchUsername);
+            return getStudentProfile(searchUsername);
         } else {
             throw new AccessDeniedException("No valid role.");
         }
     }
 
-    public StudentProfile getProfile(String searchUsername) {
+    public StudentProfile getStudentProfile(String searchUsername) {
         return studentRepo.findByAuthUser_Username(searchUsername)
                 .orElseThrow(() -> new StudentNotFoundException(searchUsername));
+    }
+
+    public ParentProfile getParentProfile(String searchUsername) {
+        return parentRepo.findByAuthUser_Username(searchUsername)
+                .orElseThrow(() -> new ParentNotFoundException(searchUsername));
+    }
+
+    public FacultyProfile getFacultyProfile(String searchUsername) {
+        return facultyRepo.findByAuthUser_Username(searchUsername)
+                .orElseThrow(() -> new FacultyNotFoundException(searchUsername));
     }
 
     public void verifyFacultyTeachesStudent(String facultyUsername, String studentUsername) {
