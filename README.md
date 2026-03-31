@@ -57,6 +57,28 @@ cd StudentWellfarePortal
 ./gradlew bootRun
 ```
 
+### Run With Docker
+
+Copy the example env file and fill in your values:
+
+```bash
+cp .env.example .env
+```
+
+Build the jar:
+
+```bash
+./gradlew bootJar
+```
+
+Start the containers:
+
+```bash
+docker compose up
+```
+
+API will be available on `localhost:8080`
+
 ## API Overview
 
 All endpoints require a Bearer JWT token unless stated otherwise.

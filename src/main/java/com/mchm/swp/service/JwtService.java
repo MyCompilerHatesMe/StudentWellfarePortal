@@ -4,6 +4,8 @@ import com.mchm.swp.model.Role;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -14,10 +16,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
-    private final String SECRET_KEY;
 
-    public JwtService() {
-        this.SECRET_KEY = System.getenv("JWT_SECRET_KEY");
+    @Value("${jwt.secret.key")
+    private String SECRET_KEY;
+
+    @PostConstruct
+    public void verifySecretKey() {
         if (this.SECRET_KEY == null || this.SECRET_KEY.length() < 32)
             throw new IllegalStateException("JWT_SECRET_KEY must be set and at least 32 characters");
     }
