@@ -3,9 +3,6 @@ package com.mchm.swp.utils;
 import com.mchm.swp.exception.FacultyNotFoundException;
 import com.mchm.swp.exception.ParentNotFoundException;
 import com.mchm.swp.exception.StudentNotFoundException;
-import com.mchm.swp.model.AuthUser;
-import com.mchm.swp.model.Role;
-import com.mchm.swp.model.event.UserRegisteredEvent;
 import com.mchm.swp.model.profiles.FacultyProfile;
 import com.mchm.swp.model.profiles.ParentProfile;
 import com.mchm.swp.model.profiles.StudentProfile;
@@ -15,11 +12,9 @@ import com.mchm.swp.repo.ParentProfileRepo;
 import com.mchm.swp.repo.StudentProfileRepo;
 import com.mchm.swp.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.event.EventListener;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -76,35 +71,4 @@ public class ProfileUtils {
                 .orElseThrow(() -> new FacultyNotFoundException(searchUsername));
     }
 
-    @EventListener
-    public void onUserRegistered(UserRegisteredEvent event) {
-        AuthUser user = event.user();
-        Set<Role> roles = event.roles();
-
-        // TODO: make cleaner
-        if (roles.contains(Role.ROLE_STUDENT)) {
-            StudentProfile profile = new StudentProfile();
-            profile.setAuthUser(user);
-            profile.setName(user.getUsername());
-            profile.setRollNo("S" + String.format("%06d", user.getId()));
-            // TODO: this should take the count from number of students, not authUser.id
-            profile.setEmail(user.getUsername() + "@university.edu.in");
-            studentRepo.save(profile);
-        }
-        if (roles.contains(Role.ROLE_FACULTY)) {
-            FacultyProfile profile = new FacultyProfile();
-            profile.setAuthUser(user);
-            profile.setName(user.getUsername());
-            profile.setEmail(user.getUsername() + "@university.edu.in");
-            facultyRepo.save(profile);
-        }
-        if (roles.contains(Role.ROLE_PARENT)) {
-            ParentProfile profile = new ParentProfile();
-            profile.setAuthUser(user);
-            profile.setName(user.getUsername());
-            profile.setEmail("placeholder");
-            profile.setNumber("placeholder"); // should be changed after registration.
-            parentRepo.save(profile);
-        }
-    }
 }
