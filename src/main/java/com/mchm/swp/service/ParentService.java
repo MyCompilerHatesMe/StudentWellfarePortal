@@ -26,12 +26,12 @@ public class ParentService {
     private final DtoMapper mapper;
 
     public ParentProfileResponse getProfile() {
-        String username = SecurityUtils.getCurrentSecurityUser().getUsername();
+        String username = SecurityUtils.getUsername();
         return mapper.toResponse(utils.getParentProfile(username));
     }
 
     public HashSet<StudentProfileResponse> getWards() {
-        ParentProfile profile = utils.getParentProfile(SecurityUtils.getCurrentSecurityUser().getUsername());
+        ParentProfile profile = utils.getParentProfile(SecurityUtils.getUsername());
 
         return profile.getChildren()
                 .stream()

@@ -1,6 +1,5 @@
 package com.mchm.swp.service;
 
-import com.mchm.swp.exception.StudentNotFoundException;
 import com.mchm.swp.model.dto.request.StandardProfileUpdateRequest;
 import com.mchm.swp.model.dto.response.FacultyProfileResponse;
 import com.mchm.swp.model.dto.response.StudentProfileResponse;
@@ -48,9 +47,7 @@ public class StudentService {
 
     public StudentProfileResponse updateStudentByUsername(String username,
                                                           StandardProfileUpdateRequest request) {
-
-        StudentProfile profile = studentRepo.findByAuthUser_Username(username)
-                .orElseThrow(() -> new StudentNotFoundException(username));
+        StudentProfile profile = utils.getVerifiedStudentProfile(username);
 
         if (!request.newName().isEmpty()) profile.setName(request.newName());
         if (!request.newEmail().isEmpty()) profile.setEmail(request.newEmail());

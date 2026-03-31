@@ -1,7 +1,5 @@
 package com.mchm.swp.service;
 
-import com.mchm.swp.exception.FacultyNotFoundException;
-import com.mchm.swp.exception.StudentNotFoundException;
 import com.mchm.swp.model.dto.request.StandardProfileUpdateRequest;
 import com.mchm.swp.model.dto.response.FacultyProfileResponse;
 import com.mchm.swp.model.dto.response.StudentProfileResponse;
@@ -36,7 +34,7 @@ public class FacultyService {
     private final DtoMapper mapper;
 
     public FacultyProfileResponse getFacultyProfile() {
-        return mapper.toResponse(utils.getVerifiedFacultyProfile(SecurityUtils.getCurrentSecurityUser().getUsername()));
+        return mapper.toResponse(utils.getVerifiedFacultyProfile(SecurityUtils.getUsername()));
     }
 
     public Map<String, List<StudentProfileResponse>> getAllStudents() {
@@ -55,22 +53,19 @@ public class FacultyService {
     public Map<String, BigDecimal> getStudentMarksByStudentUsername(String studentUsername) {
         FacultyProfile faculty = utils.getVerifiedFacultyProfile(SecurityUtils.getCurrentSecurityUser().getUsername());
         utils.verifyFacultyTeachesStudent(faculty.getAuthUsername(), studentUsername);
-        return studentRepo.findByAuthUser_Username(studentUsername)
-                .orElseThrow(() -> new StudentNotFoundException(studentUsername))
-                .getMarks();
+        return utils.getStudentProfile(studentUsername).getMarks();
     }
 
     @Transactional
     public void updateStudentMarks(String studentUsername, String subject, BigDecimal marks) {
-        String facultyUsername = SecurityUtils.getCurrentSecurityUser().getUsername();
+        String facultyUsername = SecurityUtils.getUsername();
         boolean authorised = enrollmentRepo.existsByFaculty_AuthUser_UsernameAndStudent_AuthUser_UsernameAndSubject(
                 facultyUsername, studentUsername, subject
         );
         if (!authorised)
             throw new AccessDeniedException("You are not authorized to grade: " + studentUsername + " on subject: " + subject);
 
-        StudentProfile student = studentRepo.findByAuthUser_Username(studentUsername)
-                .orElseThrow(() -> new StudentNotFoundException(studentUsername));
+        StudentProfile student = utils.getStudentProfile(studentUsername);
 
         student.getMarks().put(subject, marks);
         studentRepo.save(student);
@@ -78,9 +73,7 @@ public class FacultyService {
 
     @Transactional
     public FacultyProfileResponse updateProfile(StandardProfileUpdateRequest request) {
-        String username = SecurityUtils.getCurrentSecurityUser().getUsername();
-        FacultyProfile profile = facultyRepo.findByAuthUser_Username(username)
-                .orElseThrow(() -> new FacultyNotFoundException(username));
+        FacultyProfile profile = utils.getVerifiedFacultyProfile(SecurityUtils.getUsername());
 
         if (!request.newName().isEmpty()) profile.setName(request.newName());
         if (!request.newEmail().isEmpty()) profile.setEmail(request.newEmail());

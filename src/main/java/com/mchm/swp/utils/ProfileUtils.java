@@ -28,6 +28,7 @@ public class ProfileUtils {
     public StudentProfile getVerifiedStudentProfile(String searchUsername) {
         SecurityUser user = SecurityUtils.getCurrentSecurityUser();
 
+        if (SecurityUtils.isAdmin(user)) return getStudentProfile(searchUsername);
         if (SecurityUtils.isStudent(user)) {
             if (!user.getUsername().equals(searchUsername))
                 throw new AccessDeniedException("Usernames do not match");
@@ -36,8 +37,7 @@ public class ProfileUtils {
 
         } else if (SecurityUtils.isParent(user)) {
 
-            ParentProfile parentProfile = parentRepo.findByAuthUser_Username(user.getUsername())
-                    .orElseThrow(() -> new ParentNotFoundException(user.getUsername()));
+            ParentProfile parentProfile = getParentProfile(searchUsername);
 
             if (parentProfile.getChildren().stream()
                     .map(StudentProfile::getAuthUsername)
@@ -77,8 +77,7 @@ public class ProfileUtils {
         SecurityUser user = SecurityUtils.getCurrentSecurityUser();
         if (!searchUsername.equals(user.getUsername()) && !SecurityUtils.isAdmin(user))
             throw new AccessDeniedException("You can only check your own profile");
-        return facultyRepo.findByAuthUser_Username(searchUsername)
-                .orElseThrow(() -> new FacultyNotFoundException(searchUsername));
+        return getFacultyProfile(searchUsername);
     }
 
 }
